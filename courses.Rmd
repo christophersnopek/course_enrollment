@@ -1,0 +1,29 @@
+---
+title: "course_courseenrollment"
+author: "Christopher Snopek"
+date: "2/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(readxl)
+library(tidyverse)
+
+
+```
+
+
+```{r}
+enrollment <- read_excel("raw_data/class_enrollment_summary_by_term_2-11-2021 (1).xlsx", skip = 2, col_names = TRUE)
+View(class_enrollment_summary_by_term_2_11_2021_1_)
+```
+
+```{r}
+enrollment %>%
+  select(Course Name)
+
+enrollment
+```
+
