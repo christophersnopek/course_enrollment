@@ -1,7 +1,4 @@
 ---
-title: "course_courseenrollment"
-author: "Christopher Snopek"
-date: "2/11/2021"
 output: html_document
 ---
 
@@ -10,20 +7,35 @@ knitr::opts_chunk$set(echo = FALSE)
 
 library(readxl)
 library(tidyverse)
-
+library(janitor)
+library(ggthemes)
+library(ggplot2)
 
 ```
 
 
 ```{r}
-enrollment <- read_excel("raw_data/class_enrollment_summary_by_term_2-11-2021 (1).xlsx", skip = 2, col_names = TRUE)
-View(class_enrollment_summary_by_term_2_11_2021_1_)
+# It was pretty hard for me to find this file and upload it onto my computer.
+# I didn't 
+enrollment <- read_excel("raw_data/class_enrollment_summary_by_term_2-11-2021 (1).xlsx", skip = 3) %>%
+  clean_names() %>% 
+  drop_na(course_name)
 ```
 
 ```{r}
-enrollment %>%
-  select(Course Name)
-
-enrollment
+enrollment %>% 
+  select(course_id, course_name, total) %>%
+  group_by(course_id, course_name) %>%
+  summarize(enrollment = sum(total), .groups = "drop") %>%
+  arrange(desc(enrollment)) %>%
+  slice(1:10) %>%
+  ggplot(mapping = aes(x = enrollment, y = reorder(course_name, enrollment), fill = "red")) +
+  geom_col() + 
+  theme_economist() +
+  labs(title = "Most Popular Courses at Harvard", x = "Number of Students Enrolled", y = NULL, caption = "Source: Harvard Register") +
+  guides(fill = FALSE)
+ 
 ```
+
+
 
